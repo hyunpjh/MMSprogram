@@ -134,7 +134,7 @@ public class Database {
         Scanner sc = new Scanner(System.in);
         int number = 0;
 
-        System.out.printf("%n%n수정할 회원정보를 입력해주세요 : ");
+        System.out.printf("%n%n수정할 회원의 등록번호를 입력해주세요 : ");
         number = sc.nextInt();
         sc.nextLine();
 
@@ -247,7 +247,7 @@ public class Database {
         Scanner sc = new Scanner(System.in);
         int number = 0;
 
-        System.out.printf("%n%n삭제할 회원정보를 입력해주세요 : ");
+        System.out.printf("%n%n삭제할 회원의 등록번호를 입력해주세요 : ");
         number = sc.nextInt();
         sc.nextLine();
 
@@ -304,6 +304,55 @@ public class Database {
     }
     //5
     public void messageMem(){
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        Scanner sc = new Scanner(System.in);
+        int number = 0;
+
+        System.out.printf("%n%n쪽지를 보낼 회원의 등록번호를 입력해주세요 : ");
+        number = sc.nextInt();
+        sc.nextLine();
+
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+            conn = DriverManager.getConnection(url, user, password);
+
+            String sql = "select * from member where number = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, number);
+            rs = pstmt.executeQuery();
+
+            if(rs.next()) {// 값이 존재한다면
+                System.out.print(">> 쪽지 제목 : ");
+                String title = sc.nextLine();
+
+                System.out.print(">> 쪽지 내용 : ");
+                String text = sc.nextLine();
+
+                System.out.print("쪽지를 보내시겠습니까(y/n) ?");
+                String answer = sc.nextLine();
+
+                if (answer.equals("y")) {
+                    //쪽지 대충 발송코드
+                    System.out.println("쪽지가 정상적으로 발송되었습니다.");
+                } else{
+                    System.out.println("쪽지 발송에 실패했습니다.");
+                }
+            }
+            else{
+                System.out.println("입력하신 회원등록번호에 해당하는 회원은 존재하지 않습니다.");
+            }
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error : " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Error : " + e.getMessage());
+        } finally {
+            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.out.println("Error : " + e.getMessage()); }}
+            if (pstmt != null) { try { pstmt.close(); } catch (SQLException e) { System.out.println("Error : " + e.getMessage()); }}
+            if (conn != null) { try { conn.close(); } catch (SQLException e) { System.out.println("Error : " + e.getMessage()); }}
+        }
 
     }
 

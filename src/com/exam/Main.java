@@ -38,7 +38,6 @@ public class Main {
                         db.deleteMem();
                         break;
                     case 5:
-                        System.out.println("5.쪽지 보내기");
                         db.messageMem();
                         break;
                     case 6:
